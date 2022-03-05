@@ -16,7 +16,12 @@ app.options('*', cors())
 // request logging
 app.use(morgan('dev'));
 
+import authRoute from './routes/auth.js';
+
 // ROUTES =============================================
+
+app.use('/auth', authRoute);
+
 // Handle 404
 app.use((req, res, next) => res.status(404).send('404: Not found'));
 // Handle 500
