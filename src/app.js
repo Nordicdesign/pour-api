@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import cors from 'cors'
 
 import authRoute from './routes/auth.js'
+import { sendError } from './helpers/sendError.js'
 
 const app = express()
 
@@ -31,6 +32,11 @@ app.use((error, req, res, next) => {
   res.status(500).send('500: Internal Server Error')
 })
 // handle 401
-app.use((error, req, res) => res.status(401).send('401: Unauthorized'))
+app.use((error, req, res) => {
+  if (error) {
+    sendError(error)
+  }
+  return res.status(401).send('401: Unauthorized')
+})
 
 export default app
