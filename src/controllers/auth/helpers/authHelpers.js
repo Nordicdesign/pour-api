@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 import { Users } from '../../../database/models/users'
 import jwt from 'jsonwebtoken'
+import { sendError } from '../../../helpers/sendError'
 
 // import { api_response } from '../../../helpers/createResponse';
 // import { sendError } from '../../../helpers/sendError';
@@ -38,7 +39,7 @@ export async function checkPassword(password, hash) {
 }
 
 export const newToken = (user) => {
-  return jwt.sign({ id: user.id }, jwtToken, {
+  return jwt.sign({ id: user }, jwtToken, {
     expiresIn: jwtExp,
   })
 }
@@ -110,13 +111,17 @@ export const protect = async (req, res, next) => {
     return res.status(401).end()
   }
 
-  const user = await Users.findByPk(payload.id)
+  try {
+    const user = await Users.findByPk(payload.id)
 
-  if (!user) {
-    return res.status(401).end()
+    if (!user) {
+      return res.status(401).end()
+    }
+    console.log('user found ', user)
+
+    req.user = user.id
+    next()
+  } catch (err) {
+    sendError(res, err)
   }
-  console.log('user found ', user)
-
-  req.user = user
-  next()
 }

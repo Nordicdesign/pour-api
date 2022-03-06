@@ -61,16 +61,16 @@ const Auth = {
       if (user) {
         try {
           const match = await bcrypt.compare(req.body.password, user.password)
-          console.log('isValid > ', match)
           if (match) {
-            const token = newToken(user)
+            const token = newToken(user.id)
             res.send(
               apiResponse({
                 statusCode: 200,
                 responseCode: 'user_login',
                 message: 'User logged in',
                 payload: {
-                  token: token,
+                  user_id: user.id,
+                  access_token: token,
                 },
               })
             )
