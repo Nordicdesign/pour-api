@@ -2,7 +2,6 @@ import { Recipe } from '../../database/models/recipes'
 import { apiResponse } from '../../helpers/createResponse'
 import { sendError } from '../../helpers/sendError'
 import { v4 as uuidv4 } from 'uuid'
-// import { sendError } from '../../helpers/sendError'
 
 const Recipes = {
   async getAllRecipes(req, res) {

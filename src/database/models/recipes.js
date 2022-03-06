@@ -3,10 +3,9 @@ import { db } from '../database'
 
 export const Recipe = db.define('recipe', {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false,
     primaryKey: true,
-    autoIncrement: true,
   },
   name: {
     type: DataTypes.STRING,
