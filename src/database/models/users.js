@@ -1,7 +1,7 @@
 import DataTypes from 'sequelize'
 import { db } from '../database'
 import { Recipe } from './recipes'
-// import { UserRoles } from './user_roles'
+import { UserRoles } from './user_roles'
 
 export const Users = db.define('users', {
   id: {
@@ -31,5 +31,6 @@ export const Users = db.define('users', {
 Users.hasMany(Recipe, {
   foreignKey: 'user_id',
 })
+Users.hasMany(UserRoles)
 
-// Users.hasMany(User_roles,{ through: 'User_roles'})
+Recipe.belongsTo(Users)

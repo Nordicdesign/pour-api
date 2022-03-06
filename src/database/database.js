@@ -31,3 +31,5 @@ if (process.env.DB_URL) {
   config.port = DB_PORT
   db = new Sequelize(DATABASE, USER, PASSWORD, config)
 }
+
+db.sync({ alter: true })

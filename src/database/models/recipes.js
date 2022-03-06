@@ -1,6 +1,5 @@
 import DataTypes from 'sequelize'
 import { db } from '../database'
-// import { Users } from './users'
 
 export const Recipe = db.define('recipe', {
   id: {
@@ -20,5 +19,3 @@ export const Recipe = db.define('recipe', {
     },
   },
 })
-
-// Recipe.belongsTo(Users)
