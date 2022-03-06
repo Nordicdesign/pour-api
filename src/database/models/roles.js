@@ -1,8 +1,7 @@
-import { STRING } from "sequelize";
-import DataTypes from "sequelize";
-import { db } from "../database.js";
+import DataTypes from 'sequelize'
+import { db } from '../database'
 
-export const roles = db.define("roles", {
+export const Roles = db.define('roles', {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -11,6 +10,5 @@ export const roles = db.define("roles", {
   },
   name: {
     type: DataTypes.STRING,
-  }
-});
-
+  },
+})

@@ -1,9 +1,9 @@
-import DataTypes from "sequelize";
-import { db } from "../database.js";
-// import { user_roles } from "./user_roles";
-// import { roles } from "./roles";
+import DataTypes from 'sequelize'
+import { db } from '../database'
+import { Recipe } from './recipes'
+// import { UserRoles } from './user_roles'
 
-export const Users = db.define("users", {
+export const Users = db.define('users', {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -13,24 +13,23 @@ export const Users = db.define("users", {
   is_active: {
     type: DataTypes.TINYINT,
     allowNull: false,
-    default: "1",
+    default: '1',
   },
   email: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
   email_confirmed_at: {
-    type: DataTypes.DATE
+    type: DataTypes.DATE,
   },
   password: {
     type: DataTypes.STRING,
-    allowNull: false
-  }
-});
+    allowNull: false,
+  },
+})
 
-// users.hasMany(role, {
-//   foreignKey: "user_id",
-//   sourceKey: "user_id",
-//   as: "profile_data",
-//   constraints: false,
-// });
+Users.hasMany(Recipe, {
+  foreignKey: 'user_id',
+})
+
+// Users.hasMany(User_roles,{ through: 'User_roles'})
