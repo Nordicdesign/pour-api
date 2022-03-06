@@ -4,8 +4,10 @@ import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 
-import authRoute from './routes/auth.js'
-import { sendError } from './helpers/sendError.js'
+import authRoute from './routes/auth'
+import recipesRoute from './routes/recipes'
+import { sendError } from './helpers/sendError'
+import { protect } from './controllers/auth/helpers/authHelpers'
 
 const app = express()
 
@@ -21,8 +23,10 @@ app.options('*', cors())
 app.use(morgan('dev'))
 
 // ROUTES =============================================
-
 app.use('/auth', authRoute)
+
+app.use('/api', protect)
+app.use('/api/recipes', recipesRoute)
 
 // Handle 404
 app.use((req, res, next) => res.status(404).send('404: Not found'))

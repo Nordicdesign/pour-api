@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt'
 import { apiResponse } from '../../helpers/createResponse'
 import { sendError } from '../../helpers/sendError'
 import { Users } from '../../database/models/users'
-import { doesUserExist } from './helpers/authHelpers'
+import { doesUserExist, newToken } from './helpers/authHelpers'
 
 const Auth = {
   async createUser(req, res) {
@@ -48,21 +48,29 @@ const Auth = {
   },
 
   async logUser(req, res) {
+    if (!req.body.userName || !req.body.password) {
+      return res.send(
+        apiResponse({
+          statusCode: 400,
+          message: 'Email and password are required',
+        })
+      )
+    }
     try {
       const user = await doesUserExist(req.body.userName)
       if (user) {
-        // const isValid = await checkPassword(req.body.password, user.password);
         try {
           const match = await bcrypt.compare(req.body.password, user.password)
           console.log('isValid > ', match)
           if (match) {
+            const token = newToken(user)
             res.send(
               apiResponse({
                 statusCode: 200,
                 responseCode: 'user_login',
                 message: 'User logged in',
                 payload: {
-                  id: user.id,
+                  token: token,
                 },
               })
             )
