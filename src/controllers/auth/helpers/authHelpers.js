@@ -11,3 +11,7 @@ export async function doesUserExist(userName) {
     return user
   } 
 }
+
+export async function checkPassword(password) {
+  return true
+}
