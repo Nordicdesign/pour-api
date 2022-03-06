@@ -1,6 +1,6 @@
 import { STRING } from "sequelize";
 import DataTypes from "sequelize";
-import { db } from "../database";
+import { db } from "../database.js";
 
 export const roles = db.define("roles", {
   id: {

@@ -6,6 +6,7 @@ const config = {
   define: {
     freezeTableName: true,
     underscored: true,
+    timestamps: false
   },
   retry: {
     match: [/Deadlock/i],
@@ -22,11 +23,11 @@ if (process.env.DB_URL) {
   DB_URL = process.env.DB_URL;
   db = new Sequelize(DB_URL, config);
 } else {
-  DATABASE = process.env.DB_NAME;
-  USER = process.env.DB_USER;
-  PASSWORD = process.env.DB_PASS;
-  HOST = process.env.DB_HOST;
-  DB_PORT = process.env.DB_PORT;
+  const DATABASE = process.env.DB_NAME;
+  const USER = process.env.DB_USER;
+  const PASSWORD = process.env.DB_PASS;
+  const HOST = process.env.DB_HOST;
+  const DB_PORT = process.env.DB_PORT;
   config.host = HOST;
   config.port = DB_PORT;
   db = new Sequelize(DATABASE, USER, PASSWORD, config);

@@ -1,9 +1,9 @@
 import DataTypes from "sequelize";
-import { db } from "../database";
+import { db } from "../database.js";
 // import { user_roles } from "./user_roles";
 // import { roles } from "./roles";
 
-export const users = db.define("users", {
+export const Users = db.define("users", {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -16,6 +16,13 @@ export const users = db.define("users", {
     default: "1",
   },
   email: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  email_confirmed_at: {
+    type: DataTypes.DATE
+  },
+  password: {
     type: DataTypes.STRING,
     allowNull: false
   }
