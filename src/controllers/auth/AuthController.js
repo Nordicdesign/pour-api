@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { api_response } from '../../helpers/createResponse.js';
+import { sendError } from '../../helpers/sendError.js';
 import { Users } from '../../database/models/users.js';
 import { doesUserExist } from './helpers/authHelpers.js';
 
@@ -19,13 +20,7 @@ const Auth = {
         const saltRounds = 10;
         bcrypt.hash(password, saltRounds, function(err, hash) {
           if (err) {
-            console.log(err);
-            res.send(api_response({
-              statusCode: 422,
-              responseCode: "boop_boot_broken",
-              message: "something broken",
-              payload: err
-            }))
+            sendError(err)  
           } 
           // all good, store the user
           const user = Users.create({
@@ -41,13 +36,7 @@ const Auth = {
         })
       }
     } catch (err) {
-      console.log(err);
-      res.send(api_response({
-        statusCode: 422,
-        responseCode: "boop_boot_broken",
-        message: "something broken",
-        payload: err
-      }))
+      sendError(err)      
     }
       
   },
@@ -62,7 +51,7 @@ const Auth = {
           responseCode: "user_login",
           message: "User logged in",
           payload: {
-            user
+            "id": user.id
           }
         }))
       } else {
@@ -73,11 +62,7 @@ const Auth = {
         }))
       } 
     } catch (err) {
-      console.error(err)
-      res.send(api_response({
-        statusCode: 422,
-        responseCode: "boop_boot_broken"
-      }))
+      sendError(err)  
     }    
   }
 }
