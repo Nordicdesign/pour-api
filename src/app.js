@@ -6,6 +6,7 @@ import cors from 'cors'
 
 import authRoute from './routes/auth'
 import recipesRoute from './routes/recipes'
+import plansRoute from './routes/plans'
 import { sendError } from './helpers/sendError'
 import { protect } from './controllers/auth/helpers/authHelpers'
 
@@ -27,6 +28,7 @@ app.use('/auth', authRoute)
 
 app.use('/api', protect)
 app.use('/api/recipes', recipesRoute)
+app.use('/api/plans', plansRoute)
 
 // Handle 404
 app.use((req, res, next) => res.status(404).send('404: Not found'))

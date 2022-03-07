@@ -1,5 +1,6 @@
 import DataTypes from 'sequelize'
 import { db } from '../database'
+import { Plan } from './plan'
 import { Recipe } from './recipes'
 import { UserRoles } from './user_roles'
 
@@ -32,5 +33,7 @@ Users.hasMany(Recipe, {
   foreignKey: 'user_id',
 })
 Users.hasMany(UserRoles)
-
+Users.hasMany(Plan)
+Plan.belongsTo(Users)
 Recipe.belongsTo(Users)
+Recipe.belongsTo(Plan)

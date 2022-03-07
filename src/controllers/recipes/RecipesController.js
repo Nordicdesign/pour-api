@@ -1,7 +1,7 @@
 import { Recipe } from '../../database/models/recipes'
 import { apiResponse } from '../../helpers/createResponse'
 import { sendError } from '../../helpers/sendError'
-import { v4 as uuidv4 } from 'uuid'
+import { createRecipe, findRecipe } from './helpers/recipesHelpers'
 
 const Recipes = {
   async getAllRecipes(req, res) {
@@ -49,12 +49,7 @@ const Recipes = {
       const name = req.body.name
       const userId = req.user
       // check recipe does not exist for the user
-      const exists = await Recipe.findOne({
-        where: {
-          name: name,
-          user_id: userId,
-        },
-      })
+      const exists = await findRecipe(name, userId)
       if (exists) {
         res.send(
           apiResponse({
@@ -67,12 +62,7 @@ const Recipes = {
         )
       } else {
         try {
-          const id = uuidv4()
-          const newRecipe = await Recipe.create({
-            id: id,
-            name: name,
-            user_id: userId,
-          })
+          const newRecipe = await createRecipe(name, userId)
           res.send(
             apiResponse({
               statusCode: 201,

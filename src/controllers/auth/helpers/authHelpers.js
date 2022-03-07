@@ -117,7 +117,6 @@ export const protect = async (req, res, next) => {
     if (!user) {
       return res.status(401).end()
     }
-    console.log('user found ', user)
 
     req.user = user.id
     next()
