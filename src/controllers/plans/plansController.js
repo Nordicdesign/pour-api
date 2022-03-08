@@ -12,9 +12,8 @@ const Plans = {
           user_id: req.user,
         },
       })
-      res.send(
+      res.status(200).send(
         apiResponse({
-          statusCode: 200,
           message: 'plans',
           payload: {
             plans: results,
@@ -30,9 +29,8 @@ const Plans = {
     const id = req.params.id
     try {
       const results = await Plan.findByPk(id)
-      res.send(
+      res.status(200).send(
         apiResponse({
-          statusCode: 200,
           message: 'plan',
           payload: {
             plan: results,
@@ -59,9 +57,8 @@ const Plans = {
         },
       })
       if (planExists) {
-        res.send(
+        res.status(200).send(
           apiResponse({
-            statusCode: 200,
             message: 'plan already exists',
             payload: {
               plan: planExists,
@@ -100,9 +97,8 @@ const Plans = {
                 order,
                 userId
               )
-              res.send(
+              res.status(201).send(
                 apiResponse({
-                  statusCode: 201,
                   message: 'Plan created',
                   payload: newPlan,
                 })
@@ -121,9 +117,8 @@ const Plans = {
                 order,
                 userId
               )
-              res.send(
+              res.status(201).send(
                 apiResponse({
-                  statusCode: 201,
                   message: 'Plan created',
                   payload: newPlan,
                 })
@@ -153,16 +148,14 @@ const Plans = {
       })
       if (result) {
         await result.destroy()
-        res.send(
+        res.status(204).send(
           apiResponse({
-            statusCode: 204,
             message: 'plan deleted',
           })
         )
       } else {
-        res.send(
+        res.status(400).send(
           apiResponse({
-            statusCode: 400,
             message: 'can not do that Dave',
           })
         )

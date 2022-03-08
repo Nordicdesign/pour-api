@@ -9,9 +9,8 @@ const Auth = {
     try {
       const user = await doesUserExist(req.body.userName)
       if (user) {
-        res.send(
+        res.status(202).send(
           apiResponse({
-            statusCode: 202,
             responseCode: 'user_exists',
             message: 'User already exists',
           })
@@ -30,9 +29,8 @@ const Auth = {
             password: hash,
             is_active: '1',
           })
-          res.send(
+          res.status(201).send(
             apiResponse({
-              statusCode: 201,
               responseCode: 'user_created',
               message: 'User created',
               payload: {
@@ -49,9 +47,8 @@ const Auth = {
 
   async logUser(req, res) {
     if (!req.body.userName || !req.body.password) {
-      return res.send(
+      return res.status(400).send(
         apiResponse({
-          statusCode: 400,
           message: 'Email and password are required',
         })
       )
@@ -63,9 +60,8 @@ const Auth = {
           const match = await bcrypt.compare(req.body.password, user.password)
           if (match) {
             const token = newToken(user.id)
-            res.send(
+            res.status(200).send(
               apiResponse({
-                statusCode: 200,
                 responseCode: 'user_login',
                 message: 'User logged in',
                 payload: {
@@ -75,9 +71,8 @@ const Auth = {
               })
             )
           } else {
-            res.send(
+            res.status(401).send(
               apiResponse({
-                statusCode: 401,
                 responseCode: 'not_authorized',
                 message: 'User not authorized',
               })
@@ -87,9 +82,8 @@ const Auth = {
           sendError(res, err)
         }
       } else {
-        res.send(
+        res.status(401).send(
           apiResponse({
-            statusCode: 401,
             responseCode: 'not_authorised',
             message: 'Not authorised',
           })

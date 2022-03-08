@@ -12,9 +12,8 @@ const Recipes = {
           user_id: req.user,
         },
       })
-      res.send(
+      res.status(200).send(
         apiResponse({
-          statusCode: 200,
           message: 'recipes',
           payload: {
             recipes: results,
@@ -30,9 +29,8 @@ const Recipes = {
     const id = req.params.id
     try {
       const results = await Recipe.findByPk(id)
-      res.send(
+      res.status(200).send(
         apiResponse({
-          statusCode: 200,
           message: 'recipe',
           payload: {
             recipes: results,
@@ -51,9 +49,8 @@ const Recipes = {
       // check recipe does not exist for the user
       const exists = await findRecipe(name, userId)
       if (exists) {
-        res.send(
+        res.status(200).send(
           apiResponse({
-            statusCode: 200,
             message: 'recipe already exists',
             payload: {
               recipes: exists,
@@ -63,9 +60,8 @@ const Recipes = {
       } else {
         try {
           const newRecipe = await createRecipe(name, userId)
-          res.send(
+          res.status(201).send(
             apiResponse({
-              statusCode: 201,
               message: 'recipe created',
               payload: {
                 recipe: newRecipe,
@@ -93,16 +89,14 @@ const Recipes = {
       })
       if (result) {
         await result.destroy()
-        res.send(
+        res.status(204).send(
           apiResponse({
-            statusCode: 204,
             message: 'recipe deleted',
           })
         )
       } else {
-        res.send(
+        res.status(400).send(
           apiResponse({
-            statusCode: 400,
             message: 'can not do that Dave',
           })
         )
