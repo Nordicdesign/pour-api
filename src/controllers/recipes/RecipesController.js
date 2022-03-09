@@ -1,5 +1,4 @@
 import { Recipe } from '../../database/models/recipes'
-import { apiResponse } from '../../helpers/createResponse'
 import { sendError } from '../../helpers/sendError'
 import { createRecipe, findRecipe } from './helpers/recipesHelpers'
 
@@ -12,14 +11,10 @@ const Recipes = {
           user_id: req.user,
         },
       })
-      res.status(200).send(
-        apiResponse({
-          message: 'recipes',
-          payload: {
-            recipes: results,
-          },
-        })
-      )
+      res.status(200).send({
+        message: 'recipes',
+        recipes: results,
+      })
     } catch (err) {
       sendError(res, err)
     }
@@ -29,14 +24,10 @@ const Recipes = {
     const id = req.params.id
     try {
       const results = await Recipe.findByPk(id)
-      res.status(200).send(
-        apiResponse({
-          message: 'recipe',
-          payload: {
-            recipes: results,
-          },
-        })
-      )
+      res.status(200).send({
+        message: 'recipe',
+        recipes: results,
+      })
     } catch (err) {
       sendError(res, err)
     }
@@ -49,25 +40,17 @@ const Recipes = {
       // check recipe does not exist for the user
       const exists = await findRecipe(name, userId)
       if (exists) {
-        res.status(200).send(
-          apiResponse({
-            message: 'recipe already exists',
-            payload: {
-              recipes: exists,
-            },
-          })
-        )
+        res.status(200).send({
+          message: 'recipe already exists',
+          recipes: exists,
+        })
       } else {
         try {
           const newRecipe = await createRecipe(name, userId)
-          res.status(201).send(
-            apiResponse({
-              message: 'recipe created',
-              payload: {
-                recipe: newRecipe,
-              },
-            })
-          )
+          res.status(201).send({
+            message: 'recipe created',
+            recipe: newRecipe,
+          })
         } catch (err) {
           sendError(res, err)
         }
@@ -89,17 +72,13 @@ const Recipes = {
       })
       if (result) {
         await result.destroy()
-        res.status(204).send(
-          apiResponse({
-            message: 'recipe deleted',
-          })
-        )
+        res.status(204).send({
+          message: 'recipe deleted',
+        })
       } else {
-        res.status(400).send(
-          apiResponse({
-            message: 'can not do that Dave',
-          })
-        )
+        res.status(400).send({
+          message: 'can not do that Dave',
+        })
       }
     } catch (err) {
       sendError(res, err)

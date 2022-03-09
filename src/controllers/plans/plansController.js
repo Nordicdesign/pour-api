@@ -1,5 +1,4 @@
 import { Plan } from '../../database/models/plan'
-import { apiResponse } from '../../helpers/createResponse'
 import { sendError } from '../../helpers/sendError'
 import { createRecipe, findRecipe } from '../recipes/helpers/recipesHelpers'
 import { createPlan } from './helpers/planHelpers'
@@ -12,14 +11,10 @@ const Plans = {
           user_id: req.user,
         },
       })
-      res.status(200).send(
-        apiResponse({
-          message: 'plans',
-          payload: {
-            plans: results,
-          },
-        })
-      )
+      res.status(200).send({
+        message: 'plans',
+        plans: results,
+      })
     } catch (err) {
       sendError(res, err)
     }
@@ -29,14 +24,10 @@ const Plans = {
     const id = req.params.id
     try {
       const results = await Plan.findByPk(id)
-      res.status(200).send(
-        apiResponse({
-          message: 'plan',
-          payload: {
-            plan: results,
-          },
-        })
-      )
+      res.status(200).send({
+        message: 'plan',
+        plan: results,
+      })
     } catch (err) {
       sendError(res, err)
     }
@@ -57,14 +48,10 @@ const Plans = {
         },
       })
       if (planExists) {
-        res.status(200).send(
-          apiResponse({
-            message: 'plan already exists',
-            payload: {
-              plan: planExists,
-            },
-          })
-        )
+        res.status(200).send({
+          message: 'plan already exists',
+          plan: planExists,
+        })
       } else {
         try {
           // find the order
@@ -97,12 +84,10 @@ const Plans = {
                 order,
                 userId
               )
-              res.status(201).send(
-                apiResponse({
-                  message: 'Plan created',
-                  payload: newPlan,
-                })
-              )
+              res.status(201).send({
+                message: 'Plan created',
+                payload: newPlan,
+              })
             } catch (err) {
               sendError(res, err)
             }
@@ -117,12 +102,10 @@ const Plans = {
                 order,
                 userId
               )
-              res.status(201).send(
-                apiResponse({
-                  message: 'Plan created',
-                  payload: newPlan,
-                })
-              )
+              res.status(201).send({
+                message: 'Plan created',
+                payload: newPlan,
+              })
             } catch (err) {
               sendError(res, err)
             }
@@ -148,17 +131,13 @@ const Plans = {
       })
       if (result) {
         await result.destroy()
-        res.status(204).send(
-          apiResponse({
-            message: 'plan deleted',
-          })
-        )
+        res.status(204).send({
+          message: 'plan deleted',
+        })
       } else {
-        res.status(400).send(
-          apiResponse({
-            message: 'can not do that Dave',
-          })
-        )
+        res.status(400).send({
+          message: 'can not do that Dave',
+        })
       }
     } catch (err) {
       sendError(res, err)

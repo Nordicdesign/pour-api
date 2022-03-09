@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt'
-import { apiResponse } from '../../helpers/createResponse'
 import { sendError } from '../../helpers/sendError'
 import { Users } from '../../database/models/users'
 import { doesUserExist, newToken } from './helpers/authHelpers'
@@ -9,12 +8,10 @@ const Auth = {
     try {
       const user = await doesUserExist(req.body.userName)
       if (user) {
-        res.status(202).send(
-          apiResponse({
-            responseCode: 'user_exists',
-            message: 'User already exists',
-          })
-        )
+        res.status(202).send({
+          responseCode: 'user_exists',
+          message: 'User already exists',
+        })
       } else {
         const userName = req.body.userName
         const password = req.body.password
@@ -29,15 +26,11 @@ const Auth = {
             password: hash,
             is_active: '1',
           })
-          res.status(201).send(
-            apiResponse({
-              responseCode: 'user_created',
-              message: 'User created',
-              payload: {
-                user: user.id,
-              },
-            })
-          )
+          res.status(201).send({
+            responseCode: 'user_created',
+            message: 'User created',
+            user: user.id,
+          })
         })
       }
     } catch (err) {
@@ -47,11 +40,9 @@ const Auth = {
 
   async logUser(req, res) {
     if (!req.body.userName || !req.body.password) {
-      return res.status(400).send(
-        apiResponse({
-          message: 'Email and password are required',
-        })
-      )
+      return res.status(400).send({
+        message: 'Email and password are required',
+      })
     }
     try {
       const user = await doesUserExist(req.body.userName)
@@ -60,34 +51,26 @@ const Auth = {
           const match = await bcrypt.compare(req.body.password, user.password)
           if (match) {
             const token = newToken(user.id)
-            res.status(200).send(
-              apiResponse({
-                responseCode: 'user_login',
-                message: 'User logged in',
-                payload: {
-                  user_id: user.id,
-                  access_token: token,
-                },
-              })
-            )
+            res.status(200).send({
+              responseCode: 'user_login',
+              message: 'User logged in',
+              user_id: user.id,
+              access_token: token,
+            })
           } else {
-            res.status(401).send(
-              apiResponse({
-                responseCode: 'not_authorized',
-                message: 'User not authorized',
-              })
-            )
+            res.status(401).send({
+              code: 'responseCode',
+              message: 'message',
+            })
           }
         } catch (err) {
           sendError(res, err)
         }
       } else {
-        res.status(401).send(
-          apiResponse({
-            responseCode: 'not_authorised',
-            message: 'Not authorised',
-          })
-        )
+        res.status(401).send({
+          responseCode: 'not_authorised',
+          message: 'Not authorised',
+        })
       }
     } catch (err) {
       sendError(res, err)
