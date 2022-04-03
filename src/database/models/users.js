@@ -33,8 +33,6 @@ Users.hasMany(Recipe, {
   foreignKey: 'user_id',
 })
 Users.hasMany(UserRoles)
-Users.hasMany(Plan)
-
-// Recipe.belongsTo(Plan, {
-//   foreignKey: 'recipe_id',
-// })
+Users.hasMany(Plan, {
+  foreignKey: 'user_id',
+})

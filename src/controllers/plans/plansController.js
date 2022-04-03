@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { Plan } from '../../database/models/plan'
 import { Recipe } from '../../database/models/recipes'
 import { sendError } from '../../helpers/sendError'
@@ -37,47 +38,46 @@ const Plans = {
 
   async addPlan(req, res) {
     try {
-      // eslint-disable-next-line camelcase
-      const { recipe_name, slot, date } = req.body
+      const { recipe_name, date, slot } = req.body
       const userId = req.user
       // check recipe does not exist for the user
-      const planExists = await Plan.findOne({
-        where: {
-          // eslint-disable-next-line camelcase
-          user_id: userId,
-          slot: slot,
-          date: date,
-        },
-      })
-      if (planExists) {
-        res.status(200).send({
-          message: 'plan already exists',
-          plan: planExists,
+      const recipeExists = await findRecipe(recipe_name, userId)
+      // if it exists, check it's not alreayd on that slot
+      if (recipeExists) {
+        const planExists = await Plan.findOne({
+          where: {
+            recipe_id: recipeExists.id,
+            user_id: userId,
+            slot: slot,
+            date: date,
+          },
         })
-      } else {
-        try {
-          // find the order
-          // check current number of plans to gather order
-          let order
-          const checkOrder = await Plan.findAll({
-            attributes: ['order'],
-            where: {
-              user_id: 1,
-              slot: slot,
-              date: date,
-            },
+        // it's there already, can't add twice
+        if (planExists) {
+          res.status(200).send({
+            message: 'plan already exists',
+            plan: planExists,
           })
-          const currentOrder = checkOrder.map((order) => order.order)
-
-          if (checkOrder) {
-            order = Math.max(...currentOrder) + 10
-          } else {
-            order = 0
-          }
-
-          // if recipe exists, add to plan in correct oder
-          const recipeExists = await findRecipe(recipe_name, userId)
-          if (recipeExists) {
+        } else {
+          try {
+            // find the order
+            // check current number of plans to gather order
+            let order
+            const checkOrder = await Plan.findAll({
+              attributes: ['order'],
+              where: {
+                user_id: userId,
+                slot: slot,
+                date: date,
+              },
+            })
+            const currentOrder = checkOrder.map((order) => order.order)
+            if (checkOrder.length > 1) {
+              order = Math.max(...currentOrder) + 10
+            } else {
+              order = 0
+            }
+            // recipe exists, add to plan in correct oder
             try {
               const newPlan = await createPlan(
                 recipeExists.id,
@@ -86,31 +86,54 @@ const Plans = {
                 order,
                 userId
               )
+              newPlan.dataValues.recipe = recipeExists
               res.status(201).send({
                 message: 'Plan created',
-                payload: newPlan,
+                plan: newPlan,
               })
             } catch (err) {
               sendError(res, err)
             }
+          } catch (err) {
+            sendError(res, err)
+          }
+        }
+      } else {
+        try {
+          // find the order
+          let order
+          const checkOrder = await Plan.findAll({
+            attributes: ['order'],
+            where: {
+              user_id: userId,
+              slot: slot,
+              date: date,
+            },
+          })
+          const currentOrder = checkOrder.map((order) => order.order)
+          if (checkOrder) {
+            order = Math.max(...currentOrder) + 10
           } else {
-            // if recipe does not exist, create it, then add to plan in correct oder
-            try {
-              const newRecipe = await createRecipe(recipe_name, userId)
-              const newPlan = await createPlan(
-                newRecipe.id,
-                date,
-                slot,
-                order,
-                userId
-              )
-              res.status(201).send({
-                message: 'Plan created',
-                payload: newPlan,
-              })
-            } catch (err) {
-              sendError(res, err)
-            }
+            order = 0
+          }
+          // create the recipe
+          try {
+            const newRecipe = await createRecipe(recipe_name, userId)
+            // create the plan
+            const newPlan = await createPlan(
+              newRecipe.id,
+              date,
+              slot,
+              order,
+              userId
+            )
+            newPlan.dataValues.recipe = newRecipe
+            res.status(201).send({
+              message: 'Plan created',
+              plan: newPlan,
+            })
+          } catch (err) {
+            sendError(res, err)
           }
         } catch (err) {
           sendError(res, err)

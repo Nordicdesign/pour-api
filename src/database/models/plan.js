@@ -1,7 +1,6 @@
 import DataTypes from 'sequelize'
 import { db } from '../database'
 import { Recipe } from './recipes'
-// import { Users } from './users'
 
 export const Plan = db.define('plan', {
   id: {
@@ -26,16 +25,15 @@ export const Plan = db.define('plan', {
   order: {
     type: DataTypes.INTEGER,
   },
-  recipe_id: {
-    type: DataTypes.STRING,
-    references: {
-      model: 'Recipe',
-      key: 'id',
-    },
-  },
+  // recipe_id: {
+  //   type: DataTypes.STRING,
+  //   references: {
+  //     model: 'Recipe',
+  //     key: 'id',
+  //   },
+  // },
 })
 
-// Plan.belongsTo(Users, {
-//   foreignKey: 'user_id',
-// })
-Plan.belongsTo(Recipe)
+Plan.belongsTo(Recipe, {
+  foreignKey: 'recipe_id',
+})
