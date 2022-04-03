@@ -36,3 +36,11 @@ Users.hasMany(UserRoles)
 Users.hasMany(Plan, {
   foreignKey: 'user_id',
 })
+Recipe.hasMany(Plan, {
+  onDelete: 'cascade',
+  hooks: true,
+})
+
+Plan.belongsTo(Recipe, {
+  foreignKey: 'recipe_id',
+})

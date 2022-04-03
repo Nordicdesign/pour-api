@@ -1,6 +1,5 @@
 import DataTypes from 'sequelize'
 import { db } from '../database'
-import { Recipe } from './recipes'
 
 export const Plan = db.define('plan', {
   id: {
@@ -9,13 +8,13 @@ export const Plan = db.define('plan', {
     primaryKey: true,
     autoIncrement: true,
   },
-  user_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'Users',
-      key: 'id',
-    },
-  },
+  // user_id: {
+  //   type: DataTypes.INTEGER,
+  //   references: {
+  //     model: 'Users',
+  //     key: 'id',
+  //   },
+  // },
   date: {
     type: DataTypes.STRING,
   },
@@ -25,15 +24,4 @@ export const Plan = db.define('plan', {
   order: {
     type: DataTypes.INTEGER,
   },
-  // recipe_id: {
-  //   type: DataTypes.STRING,
-  //   references: {
-  //     model: 'Recipe',
-  //     key: 'id',
-  //   },
-  // },
-})
-
-Plan.belongsTo(Recipe, {
-  foreignKey: 'recipe_id',
 })
