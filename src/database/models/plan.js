@@ -1,5 +1,7 @@
 import DataTypes from 'sequelize'
 import { db } from '../database'
+import { Recipe } from './recipes'
+// import { Users } from './users'
 
 export const Plan = db.define('plan', {
   id: {
@@ -32,3 +34,8 @@ export const Plan = db.define('plan', {
     },
   },
 })
+
+// Plan.belongsTo(Users, {
+//   foreignKey: 'user_id',
+// })
+Plan.belongsTo(Recipe)

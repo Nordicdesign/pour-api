@@ -1,4 +1,5 @@
 import { Plan } from '../../database/models/plan'
+import { Recipe } from '../../database/models/recipes'
 import { sendError } from '../../helpers/sendError'
 import { createRecipe, findRecipe } from '../recipes/helpers/recipesHelpers'
 import { createPlan } from './helpers/planHelpers'
@@ -10,6 +11,7 @@ const Plans = {
         where: {
           user_id: req.user,
         },
+        include: Recipe,
       })
       res.status(200).send({
         message: 'plans',

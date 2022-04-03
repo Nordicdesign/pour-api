@@ -1,5 +1,6 @@
 import DataTypes from 'sequelize'
 import { db } from '../database'
+// import { Users } from './users'
 
 export const UserRoles = db.define('user_roles', {
   id: {
@@ -23,3 +24,7 @@ export const UserRoles = db.define('user_roles', {
     },
   },
 })
+
+// UserRoles.belongsTo(Users, {
+//   foreignKey: 'user_id',
+// })

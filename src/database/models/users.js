@@ -34,6 +34,7 @@ Users.hasMany(Recipe, {
 })
 Users.hasMany(UserRoles)
 Users.hasMany(Plan)
-Plan.belongsTo(Users)
-Recipe.belongsTo(Users)
-Recipe.belongsTo(Plan)
+
+// Recipe.belongsTo(Plan, {
+//   foreignKey: 'recipe_id',
+// })
