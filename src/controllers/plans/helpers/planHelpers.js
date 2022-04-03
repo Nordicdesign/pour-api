@@ -12,3 +12,34 @@ export const createPlan = async (recipeId, date, slot, order, userId) => {
     order: order,
   })
 }
+
+export const findPlan = async (recipeId, userId, slot, date) => {
+  return await Plan.findOne({
+    where: {
+      recipe_id: recipeId,
+      user_id: userId,
+      slot: slot,
+      date: date,
+    },
+  })
+}
+
+export const findOrder = async (userId, slot, date) => {
+  let order
+  const checkOrder = await Plan.findAll({
+    attributes: ['order'],
+    where: {
+      user_id: userId,
+      slot: slot,
+      date: date,
+    },
+  })
+  const currentOrder = checkOrder.map((order) => order.order)
+  if (checkOrder.length > 1) {
+    order = Math.max(...currentOrder) + 10
+  } else {
+    order = 0
+  }
+
+  return order
+}
