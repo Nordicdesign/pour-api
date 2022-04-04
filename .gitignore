@@ -2,6 +2,9 @@ node_modules
 dist
 .env
 .vscode
+/cgi-bin
+.ftpquota
+.htaccess
 
 # Logs
 logs
