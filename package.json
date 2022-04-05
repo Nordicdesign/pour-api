@@ -18,6 +18,8 @@
   "author": "Alex Lillo",
   "license": "ISC",
   "dependencies": {
+    "@sentry/node": "^6.19.4",
+    "@sentry/tracing": "^6.19.4",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
