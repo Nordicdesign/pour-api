@@ -10,6 +10,7 @@ export const Users = db.define('users', {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
+    unique: true,
   },
   is_active: {
     type: DataTypes.TINYINT,

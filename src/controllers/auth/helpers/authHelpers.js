@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt'
 import { Users } from '../../../database/models/users'
 import jwt from 'jsonwebtoken'
 import { sendError } from '../../../helpers/sendError'
+import { Requests } from '../../../database/models/requests'
 
 // import { api_response } from '../../../helpers/createResponse';
 // import { sendError } from '../../../helpers/sendError';
@@ -52,6 +53,21 @@ export const verifyToken = (token) =>
     })
   })
 
+export const getResetRequest = async (id) => {
+  const thisRequest = await Requests.findByPk(id)
+  return thisRequest
+}
+
+export const updatePassword = async (email, password) => {
+  return await Users.update(
+    { password: password },
+    {
+      where: {
+        email: email,
+      },
+    }
+  )
+}
 // export const signup = async (req, res) => {
 //   if (!req.body.email || !req.body.password) {
 //     return res.status(400).send({ message: 'need email and password' })

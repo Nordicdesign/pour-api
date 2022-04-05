@@ -1,7 +1,9 @@
 import bcrypt from 'bcrypt'
+import { v4 as uuidv4 } from 'uuid'
 import { sendError } from '../../helpers/sendError'
 import { Users } from '../../database/models/users'
-import { doesUserExist, newToken } from './helpers/authHelpers'
+import { doesUserExist, newToken, getResetRequest } from './helpers/authHelpers'
+import { Requests } from '../../database/models/requests'
 
 const Auth = {
   async createUser(req, res) {
@@ -75,6 +77,63 @@ const Auth = {
     } catch (err) {
       sendError(res, err)
     }
+  },
+
+  async forgotRequest(req, res) {
+    try {
+      const user = await doesUserExist(req.body.userName)
+      console.log(user)
+      if (user) {
+        const id = uuidv4()
+        const request = {
+          id,
+          email: user.email,
+        }
+        Requests.create(request)
+      }
+      res.status(200).json()
+    } catch (err) {
+      sendError(res, err)
+    }
+  },
+
+  async resetPassword(req, res) {
+    try {
+      const thisRequest = await getResetRequest(req.body.id)
+      if (thisRequest) {
+        const user = await doesUserExist(thisRequest.email)
+        console.log('found user > ', user)
+        const password = req.body.password
+        console.log(password)
+        const saltRounds = 10
+        bcrypt.hash(password, saltRounds, async function (err, hash) {
+          if (err) {
+            sendError(res, err)
+          }
+          console.log('new password > ', hash)
+          // all good, store the user
+          await Users.update(
+            { password: hash },
+            {
+              where: {
+                email: user.email,
+              },
+            }
+          )
+          res.status(204).json()
+        })
+        // bcrypt.hash(req.body.password, 10).then((hashed) => {
+        //   user.password = hashed
+        //   updateUser(user)
+        //   res.status(204).json()
+        // })
+      } else {
+        res.status(404).json()
+      }
+    } catch (err) {
+      sendError(res, err)
+    }
+    res.status(200).json()
   },
 }
 
