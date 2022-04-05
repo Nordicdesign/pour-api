@@ -1,5 +1,5 @@
 import express from 'express'
-import Plan from '../controllers/plans/plansController'
+import Plan from '../controllers/plans/PlansController'
 const router = express.Router()
 
 router.post('/', Plan.addPlan)
